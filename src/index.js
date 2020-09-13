@@ -2,15 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import AuthorQuiz from './AuthorQuiz';
-
 import * as serviceWorker from './serviceWorker';
+import {sample, shuffle} from 'underscore';
 
 const authors = [
   {
     name: 'Mark Twain',
     imageUrl: 'images/authors/marktwain.jpg',
     imageSource: 'Wikimedia Commons',
-    books: ['The Adventures of Huckleberry Finn']
+    books: ['The Adventures of Huckleberry Finn',
+          'Life of the Mississippi',
+          'Rouging It']
   },
   {
     name: 'Joseph Conrad',
@@ -46,11 +48,28 @@ const authors = [
   }
 ];
 
+function getTrunData(authors)
+{
+    const allBooks = authors.reduce(function (p,c,i) {
+      return p.concat(c.books);
+    },[]);
+    const fourRandomBooks = shuffle(allBooks).slice(0,4);
+    const answer = sample(fourRandomBooks);
+
+    return{
+      books : fourRandomBooks,
+      author : authors.find((author) =>
+            author.books.some((title) =>
+            title === answer))
+    }
+}
+
 const state = {  
-  turnData : {
-    author : authors[0],
-    books : authors[0].books
-  }
+  turnData : getTrunData(authors)
+  // turnData: {
+  //   author: authors[0],
+  //   books: authors[0].books
+  // }
 };
 
 ReactDOM.render(
